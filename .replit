@@ -1,2 +1,18 @@
 [nix]
 channel = "stable-25_05"
+
+[workflows]
+runButton = "Start Game Server"
+
+[[workflows.workflow]]
+name = "Start Game Server"
+author = 44117427
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm install"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm start"

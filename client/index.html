@@ -1,0 +1,53 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>No_Gas_Slaps™ - Arena</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="gameContainer">
+        <header class="game-header">
+            <h1>🥊 No_Gas_Slaps™</h1>
+            <div class="game-stats">
+                <div id="playerCount">Players: 0</div>
+                <div id="playerHealth">Health: 100</div>
+                <div id="playerScore">Score: 0</div>
+            </div>
+        </header>
+        
+        <div class="arena-container">
+            <canvas id="gameCanvas" width="800" height="600"></canvas>
+            <div class="arena-overlay">
+                <div id="connectionStatus" class="status-indicator">Connecting...</div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <div class="movement-controls">
+                <h3>Controls:</h3>
+                <p>🖱️ Click to move | 🖱️ Right-click to slap | ⌨️ WASD to move</p>
+            </div>
+            
+            <div class="game-actions">
+                <button id="respawnBtn" class="action-btn" style="display: none;">
+                    🔄 Respawn
+                </button>
+                <button id="telegramBtn" class="action-btn">
+                    📱 Back to Telegram
+                </button>
+            </div>
+        </div>
+        
+        <div class="leaderboard">
+            <h3>🏆 Live Players</h3>
+            <div id="playersList"></div>
+        </div>
+    </div>
+    
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
