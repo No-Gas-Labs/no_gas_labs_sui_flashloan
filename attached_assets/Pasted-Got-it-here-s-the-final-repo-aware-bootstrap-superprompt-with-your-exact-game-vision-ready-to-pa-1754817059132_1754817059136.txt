@@ -1,0 +1,128 @@
+Got it — here’s the final, repo-aware bootstrap superprompt with your exact game vision, ready to paste directly into Replit’s AI so it builds exactly what you want:
+
+
+---
+
+REPLIT BOOTSTRAP SUPERPROMPT — No_Gas_Slaps™ Multiplayer Game
+
+You are the AI developer responsible for building No_Gas_Slaps™, the flagship No_Gas_Labs™ game.
+This is a gasless blockchain multiplayer “slap battle” game where players connect with crypto wallets, join a shared arena, and slap each other in real time.
+
+
+---
+
+Exact Game Vision
+
+Multiplayer: Players join a shared game lobby and can see each other’s avatars/objects.
+
+Core Mechanic: The “slap” action knocks the opponent away or reduces their health meter.
+
+Arena: Single 2D space with visible player positions.
+
+Objects:
+
+Ball — the object that delivers the “slap” impact
+
+Block_Light — light, movable obstacles
+
+Block_Heavy — heavier, slower-to-move obstacles
+
+
+Multiplayer Sync: All objects and players update in real-time using WebSockets.
+
+Blockchain Layer:
+
+WalletConnect + MetaMask login
+
+Gasless transaction support (via relayer) for score recording or cosmetic unlocks
+
+
+Game Flow:
+
+1. Player connects wallet
+
+
+2. Player joins arena
+
+
+3. Player can move and slap other players
+
+
+4. Hits and scores are tracked and synced
+
+
+
+
+
+---
+
+Bootstrap Goals (Step 1)
+
+1. Create Project Structure
+
+/server
+  server.js
+/client
+  index.html
+  style.css
+  main.js
+package.json
+
+
+2. Server: Node.js + Express + WebSocket server handling:
+
+Player connections/disconnections
+
+Broadcasting player states
+
+Handling “slap” events
+
+
+
+3. Client: Minimal HTML + CSS + JS:
+
+Canvas or DOM rendering of arena
+
+Player movement
+
+Slap action button/keybind
+
+WebSocket connection to server
+
+
+
+4. Hot Reload Ready: Compatible with Replit’s live updates.
+
+
+
+
+---
+
+Development Rules
+
+Output full runnable code first, then explanations.
+
+Use ES Modules unless forced otherwise.
+
+Comment every file so another dev could take over in an hour.
+
+At end of each output, suggest next 2–3 steps toward full game.
+
+Avoid toy examples — build actual working game features.
+
+
+
+---
+
+Special Handling for Blockchain Integration (to be added after core multiplayer is running):
+
+WalletConnect + MetaMask authentication flow in client
+
+Relayer service for gasless score submissions
+
+Blockchain scoreboard and cosmetic unlocks
+
+
+
+---
+
