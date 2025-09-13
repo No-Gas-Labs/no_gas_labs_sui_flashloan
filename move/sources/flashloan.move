@@ -2,12 +2,18 @@ module no_gas_labs::flashloan {
     use sui::tx_context::TxContext;
     use sui::event;
     use sui::object::{Self, UID};
+    use sui::object;
 
-    /// Resource tracking a flash loan pool. Placeholder liquidity tracking.
+    /// Flash loan pool with simple liquidity counter (placeholder for real liquidity mgmt)
     struct Pool has key {
         id: UID,
         liquidity: u64,
     }
+
+    /// Linear ticket that must be consumed in the same transaction via `repay`.
+    /// Not having the `drop` ability ensures atomicity: if the ticket is not
+    /// consumed, the transaction will fail at the end of execution.
+    struct LoanTicket { amount: u64 }
 
     struct LoanEvent has copy, drop { amount: u64, ok: bool }
 
@@ -16,13 +22,18 @@ module no_gas_labs::flashloan {
         Pool { id, liquidity: 1_000_000 }
     }
 
-    /// Generic flash loan entry. Borrower must return within tx.
-    public entry fun borrow(_pool: &mut Pool, amount: u64, _ctx: &mut TxContext) {
-        assert!(amount > 0, 1);
-        // Emit event start
+    /// Borrow emits a start event and returns a linear `LoanTicket` that must be
+    /// consumed by `repay` within the same programmable transaction.
+    public entry fun borrow(pool: &mut Pool, amount: u64, _ctx: &mut TxContext): LoanTicket {
+        assert!(amount > 0 && amount <= pool.liquidity, 1);
         event::emit(LoanEvent { amount, ok: false });
-        // Placeholder: In real impl, transfer funds and require callback to repay within same tx.
-        // Success mark for simulation path; if any downstream call fails, whole tx reverts automatically.
+        LoanTicket { amount }
+    }
+
+    /// Repay consumes the `LoanTicket` and emits the success event. Any failure
+    /// in downstream calls will revert the entire transaction.
+    public entry fun repay(_pool: &mut Pool, ticket: LoanTicket, _ctx: &mut TxContext) {
+        let LoanTicket { amount } = ticket;
         event::emit(LoanEvent { amount, ok: true });
     }
 }

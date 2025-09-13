@@ -4,6 +4,7 @@ import { useWalletKit, ConnectButton, useSignAndExecuteTransaction } from '@myst
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
 import { detectPoolDiffs } from './components/arbitrage'
 import { buildFlashLoanTx } from './components/flashLoan'
+import { clients } from './sui'
 import 'react-grid-layout/css/styles.css'
 import 'react-resizable/css/styles.css'
 
@@ -64,7 +65,7 @@ function TradePanel() {
     if (!packageId || !poolId || !amount) return alert('Enter packageId, poolId, and amount')
     setSending(true)
     try {
-      const tx = buildFlashLoanTx({ packageId, poolId, amount, borrower: currentAccount.address })
+      const tx = buildFlashLoanTx({ packageId, poolId, amount })
       const res = await signAndExecute({ transaction: tx })
       alert(`Submitted: ${res.digest || 'ok'}`)
     } catch (e) {
@@ -72,6 +73,23 @@ function TradePanel() {
       alert('Flash loan failed; transaction reverted.')
     } finally {
       setSending(false)
+    }
+  }
+
+  const onSimulate = async () => {
+    if (!currentAccount) return alert('Connect Sui Wallet first')
+    if (!packageId || !poolId || !amount) return alert('Enter packageId, poolId, and amount')
+    try {
+      const tx = buildFlashLoanTx({ packageId, poolId, amount })
+      const client = clients.testnet
+      const result = await client.devInspectTransactionBlock({
+        transactionBlock: await tx.build({ client }),
+        sender: currentAccount.address,
+      })
+      alert(`Simulated: status=${result.effects.status.status}`)
+    } catch (e) {
+      console.error(e)
+      alert('Simulation failed')
     }
   }
 
@@ -90,7 +108,7 @@ function TradePanel() {
       </div>
       <div className="mt-1 flex gap-2">
         <button disabled={sending} onClick={onFlashLoan} className="bg-teal-700 hover:bg-teal-500 disabled:opacity-50 text-black px-3 py-2 text-xs">Execute Flash Loan</button>
-        <button className="bg-magenta-700 hover:bg-magenta-500 text-black px-3 py-2 text-xs">Simulate</button>
+        <button onClick={onSimulate} className="bg-magenta-700 hover:bg-magenta-500 text-black px-3 py-2 text-xs">Simulate</button>
       </div>
     </div>
   )
