@@ -2,6 +2,9 @@ import React, { useMemo, useState } from 'react'
 import GridLayout from 'react-grid-layout'
 import { useWalletKit, ConnectButton } from '@mysten/dapp-kit'
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
+import { detectPoolDiffs } from './components/arbitrage'
+import 'react-grid-layout/css/styles.css'
+import 'react-resizable/css/styles.css'
 
 const baseLayouts = [
   { i: 'pools', x: 0, y: 0, w: 6, h: 8 },
@@ -13,22 +16,34 @@ const baseLayouts = [
 const card = 'pixel-border rounded-sm bg-[#0f1520] p-4'
 
 function PoolsWidget() {
-  // Placeholder pool monitor data
   const pools = [
-    { id: 'POOL_A', apy: 8.2, liq: 1200000, symbol: 'SUI/USDC' },
-    { id: 'POOL_B', apy: 11.4, liq: 540000, symbol: 'SUI/USDT' },
+    { id: 'POOL_A', dex: 'DEX-A', price: 1.002, pair: 'SUI/USDC', apy: 8.2, liq: 1200000 },
+    { id: 'POOL_B', dex: 'DEX-B', price: 0.998, pair: 'SUI/USDC', apy: 11.4, liq: 540000 },
   ]
+  const opps = detectPoolDiffs(pools)
   return (
     <div className={card}>
       <h2 className="font-pixel text-teal-500 mb-4 text-xs">Pool Monitoring</h2>
       <div className="space-y-2">
         {pools.map(p => (
           <div key={p.id} className="flex justify-between text-sm">
-            <div>{p.symbol}</div>
+            <div>{p.pair} <span className="opacity-60">({p.dex})</span></div>
             <div className="text-magenta-500">APY {p.apy}%</div>
             <div className="text-teal-500">Liq ${p.liq.toLocaleString()}</div>
           </div>
         ))}
+      </div>
+      <div className="mt-3 text-xs">
+        <div className="opacity-70 mb-1">Detected Arbitrage (Pool Diff):</div>
+        {opps.length === 0 ? (
+          <div className="opacity-50">None</div>
+        ) : (
+          <ul className="list-disc list-inside space-y-1">
+            {opps.map((o, i) => (
+              <li key={i} className="text-teal-500">{o.pair}: {o.from} → {o.to} spread {(o.spread*100).toFixed(2)}%</li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   )
