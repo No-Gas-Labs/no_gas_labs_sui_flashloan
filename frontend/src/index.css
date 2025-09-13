@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  @apply bg-ink text-white;
+}
+
+.pixel-border {
+  box-shadow: 0 0 0 2px #222, 0 0 0 4px #00F5D4, 0 0 0 6px #FF00A8;
+}
