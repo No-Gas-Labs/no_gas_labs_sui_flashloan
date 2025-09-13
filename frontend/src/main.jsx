@@ -5,7 +5,7 @@ import { WalletProvider, SuiClientProvider, createNetworkConfig } from '@mysten/
 import { getFullnodeUrl } from '@mysten/sui/client'
 import App from './App'
 import './index.css'
-import '@mysten/dapp-kit/styles.css'
+import '@mysten/dapp-kit/dist/index.css'
 
 const queryClient = new QueryClient()
 
