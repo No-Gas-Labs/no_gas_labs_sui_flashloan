@@ -1,0 +1,8 @@
+yarn run v1.22.22
+warning ../package.json: No license field
+$ vite
+
+  VITE v7.1.5  ready in 346 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose

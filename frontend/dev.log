@@ -1,0 +1,28 @@
+yarn run v1.22.22
+warning ../package.json: No license field
+$ vite
+
+  VITE v7.1.5  ready in 353 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+Error: Cannot apply unknown utility class `text-white`. Are you using CSS modules or similar and missing `@reference`? https://tailwindcss.com/docs/functions-and-directives#reference-directive
+    at onInvalidCandidate (/app/frontend/node_modules/tailwindcss/dist/lib.js:18:1332)
+    at ge (/app/frontend/node_modules/tailwindcss/dist/lib.js:13:29888)
+    at /app/frontend/node_modules/tailwindcss/dist/lib.js:18:373
+    at L (/app/frontend/node_modules/tailwindcss/dist/lib.js:3:1656)
+    at je (/app/frontend/node_modules/tailwindcss/dist/lib.js:18:172)
+    at bi (/app/frontend/node_modules/tailwindcss/dist/lib.js:35:780)
+    at async yi (/app/frontend/node_modules/tailwindcss/dist/lib.js:35:1123)
+    at async Or (/app/frontend/node_modules/@tailwindcss/node/dist/index.js:10:3384)
+    at async W (/app/frontend/node_modules/@tailwindcss/postcss/dist/index.js:10:4048)
+    at async Object.Once (/app/frontend/node_modules/@tailwindcss/postcss/dist/index.js:10:4318)
+    at async LazyResult.runAsync (/app/frontend/node_modules/postcss/lib/lazy-result.js:293:11)
+    at async runPostCSS (file:///app/frontend/node_modules/vite/dist/node/chunks/dep-M_KD0XSK.js:32483:19)
+    at async compilePostCSS (file:///app/frontend/node_modules/vite/dist/node/chunks/dep-M_KD0XSK.js:32463:17)
+    at async compileCSS (file:///app/frontend/node_modules/vite/dist/node/chunks/dep-M_KD0XSK.js:32394:26)
+    at async TransformPluginContext.handler (file:///app/frontend/node_modules/vite/dist/node/chunks/dep-M_KD0XSK.js:31924:54)
+    at async EnvironmentPluginContainer.transform (file:///app/frontend/node_modules/vite/dist/node/chunks/dep-M_KD0XSK.js:31325:14)
+    at async loadAndTransform (file:///app/frontend/node_modules/vite/dist/node/chunks/dep-M_KD0XSK.js:26407:26)
+error Command failed with signal "SIGTERM".
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.

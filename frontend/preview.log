@@ -1,0 +1,7 @@
+yarn run v1.22.22
+warning ../package.json: No license field
+$ vite preview --port 3000
+  ➜  Local:   http://localhost:3000/
+  ➜  Network: use --host to expose
+error Command failed with signal "SIGTERM".
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
