@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react'
 import GridLayout from 'react-grid-layout'
-import { useWalletKit, ConnectButton, useSignAndExecuteTransaction } from '@mysten/dapp-kit'
+import { useCurrentAccount, ConnectButton, useSignAndExecuteTransaction } from '@mysten/dapp-kit'
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
 import { detectPoolDiffs } from './components/arbitrage'
 import { buildFlashLoanTx } from './components/flashLoan'
