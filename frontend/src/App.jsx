@@ -52,7 +52,7 @@ function PoolsWidget() {
 }
 
 function TradePanel() {
-  const currentAccount = useCurrentAccount()
+  const account = useCurrentAccount()
   const { mutateAsync: signAndExecute } = useSignAndExecuteTransaction()
   const [amount, setAmount] = useState('')
   const [pool, setPool] = useState('POOL_A')
@@ -61,7 +61,7 @@ function TradePanel() {
   const [sending, setSending] = useState(false)
 
   const onFlashLoan = async () => {
-    if (!currentAccount) return alert('Connect Sui Wallet first')
+    if (!account) return alert('Connect Sui Wallet first')
     if (!packageId || !poolId || !amount) return alert('Enter packageId, poolId, and amount')
     setSending(true)
     try {
@@ -77,14 +77,14 @@ function TradePanel() {
   }
 
   const onSimulate = async () => {
-    if (!currentAccount) return alert('Connect Sui Wallet first')
+    if (!account) return alert('Connect Sui Wallet first')
     if (!packageId || !poolId || !amount) return alert('Enter packageId, poolId, and amount')
     try {
       const tx = buildFlashLoanTx({ packageId, poolId, amount })
       const client = clients.testnet
       const result = await client.devInspectTransactionBlock({
         transactionBlock: await tx.build({ client }),
-        sender: currentAccount.address,
+        sender: account.address,
       })
       alert(`Simulated: status=${result.effects.status.status}`)
     } catch (e) {
@@ -96,7 +96,7 @@ function TradePanel() {
   return (
     <div className={card}>
       <h2 className="font-pixel text-magenta-500 mb-4 text-xs">Trading Strategy</h2>
-      <div className="text-xs mb-2">Wallet: {currentAccount?.address ?? 'Not connected'}</div>
+      <div className="text-xs mb-2">Wallet: {account?.address ?? 'Not connected'}</div>
       <div className="grid grid-cols-2 gap-2 mb-2">
         <input value={packageId} onChange={e => setPackageId(e.target.value)} placeholder="Move packageId" className="bg-black border border-teal-700 p-2 text-xs col-span-2" />
         <input value={poolId} onChange={e => setPoolId(e.target.value)} placeholder="Pool objectId" className="bg-black border border-teal-700 p-2 text-xs col-span-2" />

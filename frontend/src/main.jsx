@@ -2,10 +2,10 @@ import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { WalletProvider, SuiClientProvider, createNetworkConfig } from '@mysten/dapp-kit'
-import { getFullnodeUrl } from '@mysten/sui/client'
+import { getFullnodeUrl } from '@mysten/sui'
 import App from './App'
 import './index.css'
-import '@mysten/dapp-kit/dist/index.css'
+import '@mysten/dapp-kit/styles.css'
 
 const queryClient = new QueryClient()
 
@@ -16,12 +16,12 @@ const { networkConfig } = createNetworkConfig({
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <SuiClientProvider networks={networkConfig} defaultNetwork="testnet">
-      <WalletProvider autoConnect>
-        <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <SuiClientProvider networks={networkConfig} defaultNetwork="testnet">
+        <WalletProvider autoConnect>
           <App />
-        </QueryClientProvider>
-      </WalletProvider>
-    </SuiClientProvider>
+        </WalletProvider>
+      </SuiClientProvider>
+    </QueryClientProvider>
   </React.StrictMode>,
 )
