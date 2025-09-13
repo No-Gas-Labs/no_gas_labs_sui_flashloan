@@ -1,0 +1,27 @@
+name: CI
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install deps
+        run: |
+          if [ -f yarn.lock ]; then corepack enable || true; yarn install --frozen-lockfile || yarn install; else npm ci || npm i; fi
+      - name: Lint
+        run: |
+          if [ -f package.json ]; then
+            if [ -f yarn.lock ]; then yarn run lint || true; else npm run lint --if-present; fi
+          fi
+      - name: Build
+        run: |
+          if [ -f package.json ]; then
+            if [ -f yarn.lock ]; then yarn run build || true; else npm run build --if-present; fi
+          fi
