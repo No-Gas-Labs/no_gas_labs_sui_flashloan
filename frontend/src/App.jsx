@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from 'react'
-import GridLayout from 'react-grid-layout'
+import React, { useEffect, useMemo, useState } from 'react'
+import { Responsive, WidthProvider } from 'react-grid-layout'
 import { useCurrentAccount, ConnectButton, useSignAndExecuteTransaction } from '@mysten/dapp-kit'
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
 import { detectPoolDiffs } from './components/arbitrage'
@@ -8,12 +8,47 @@ import { clients } from './sui'
 import 'react-grid-layout/css/styles.css'
 import 'react-resizable/css/styles.css'
 
-const baseLayouts = [
+const ResponsiveGridLayout = WidthProvider(Responsive)
+const storageKey = 'ngl_layouts_v1'
+
+const baseLg = [
   { i: 'pools', x: 0, y: 0, w: 6, h: 8 },
   { i: 'trade', x: 6, y: 0, w: 6, h: 8 },
   { i: 'history', x: 0, y: 8, w: 6, h: 8 },
   { i: 'charts', x: 6, y: 8, w: 6, h: 8 },
 ]
+const baseMd = [
+  { i: 'pools', x: 0, y: 0, w: 5, h: 8 },
+  { i: 'trade', x: 5, y: 0, w: 5, h: 8 },
+  { i: 'history', x: 0, y: 8, w: 5, h: 8 },
+  { i: 'charts', x: 5, y: 8, w: 5, h: 8 },
+]
+const baseSm = [
+  { i: 'pools', x: 0, y: 0, w: 6, h: 8 },
+  { i: 'trade', x: 0, y: 8, w: 6, h: 8 },
+  { i: 'history', x: 0, y: 16, w: 6, h: 8 },
+  { i: 'charts', x: 0, y: 24, w: 6, h: 8 },
+]
+const baseXs = [
+  { i: 'pools', x: 0, y: 0, w: 4, h: 8 },
+  { i: 'trade', x: 0, y: 8, w: 4, h: 8 },
+  { i: 'history', x: 0, y: 16, w: 4, h: 8 },
+  { i: 'charts', x: 0, y: 24, w: 4, h: 8 },
+]
+const baseXxs = [
+  { i: 'pools', x: 0, y: 0, w: 2, h: 10 },
+  { i: 'trade', x: 0, y: 10, w: 2, h: 10 },
+  { i: 'history', x: 0, y: 20, w: 2, h: 10 },
+  { i: 'charts', x: 0, y: 30, w: 2, h: 10 },
+]
+
+const defaultLayouts = {
+  lg: baseLg,
+  md: baseMd,
+  sm: baseSm,
+  xs: baseXs,
+  xxs: baseXxs,
+}
 
 const card = 'pixel-border rounded-sm bg-[#0f1520] p-4'
 
@@ -29,9 +64,9 @@ function PoolsWidget() {
       <div className="space-y-2">
         {pools.map(p => (
           <div key={p.id} className="flex justify-between text-sm">
-            <div>{p.pair} <span className="opacity-60">({p.dex})</span></div>
-            <div className="text-magenta-500">APY {p.apy}%</div>
-            <div className="text-teal-500">Liq ${p.liq.toLocaleString()}</div>
+            <div title={`Pair: ${p.pair} on ${p.dex}`}>{p.pair} <span className="opacity-60">({p.dex})</span></div>
+            <div className="text-magenta-500" title={`Annual Percentage Yield: ${p.apy}%`}>APY {p.apy}%</div>
+            <div className="text-teal-500" title={`Available Liquidity`}>Liq ${p.liq.toLocaleString()}</div>
           </div>
         ))}
       </div>
@@ -42,10 +77,18 @@ function PoolsWidget() {
         ) : (
           <ul className="list-disc list-inside space-y-1">
             {opps.map((o, i) => (
-              <li key={i} className="text-teal-500">{o.pair}: {o.from} → {o.to} spread {(o.spread*100).toFixed(2)}%</li>
+              <li key={i} className="text-teal-500" title={`Spread ${(o.spread*100).toFixed(2)}%`}>
+                {o.pair}: {o.from} → {o.to} spread {(o.spread*100).toFixed(2)}%
+              </li>
             ))}
           </ul>
         )}
+      </div>
+      <div className="mt-4 space-y-2">
+        <div className="opacity-70 text-xs">Cross-Chain Arbitrage (placeholder)</div>
+        <div className="text-[11px] opacity-60">Hook: provide external chain price feeds API, construct bridging strategy, and Move callback entry.</div>
+        <div className="opacity-70 text-xs mt-2">Liquidation Arbitrage (placeholder)</div>
+        <div className="text-[11px] opacity-60">Hook: monitor lending protocol liquidation queues; add Move liquidation executor entry.</div>
       </div>
     </div>
   )
@@ -107,8 +150,8 @@ function TradePanel() {
         <input value={amount} onChange={e => setAmount(e.target.value)} placeholder="Loan amount (u64)" className="bg-black border border-magenta-700 p-2 text-xs" />
       </div>
       <div className="mt-1 flex gap-2">
-        <button disabled={sending} onClick={onFlashLoan} className="bg-teal-700 hover:bg-teal-500 disabled:opacity-50 text-black px-3 py-2 text-xs">Execute Flash Loan</button>
-        <button onClick={onSimulate} className="bg-magenta-700 hover:bg-magenta-500 text-black px-3 py-2 text-xs">Simulate</button>
+        <button title="Execute atomic borrow + repay in a single tx" disabled={sending} onClick={onFlashLoan} className="bg-teal-700 hover:bg-teal-500 disabled:opacity-50 text-black px-3 py-2 text-xs">Execute Flash Loan</button>
+        <button title="Run devInspect on testnet without sending a transaction" onClick={onSimulate} className="bg-magenta-700 hover:bg-magenta-500 text-black px-3 py-2 text-xs">Simulate</button>
       </div>
     </div>
   )
@@ -124,7 +167,7 @@ function HistoryView() {
       <h2 className="font-pixel text-teal-500 mb-4 text-xs">Transaction History</h2>
       <div className="space-y-2 text-xs">
         {history.map(h => (
-          <div key={h.id} className="flex justify-between">
+          <div key={h.id} className="flex justify-between" title={`When: ${h.when} | PnL: ${h.pnl}%`}>
             <span>{h.id}</span>
             <span className={h.pnl >= 0 ? 'text-teal-500' : 'text-magenta-500'}>{h.pnl >= 0 ? '+' : ''}{h.pnl}%</span>
             <span className="opacity-70">{h.when}</span>
@@ -144,7 +187,7 @@ function PriceCharts() {
         <LineChart data={data}>
           <XAxis dataKey="t" hide />
           <YAxis hide domain={[7, 15]} />
-          <Tooltip contentStyle={{ background: '#0b0f14', border: '1px solid #00F5D4', fontSize: 10 }} />
+          <Tooltip contentStyle={{ background: '#0b0f14', border: '1px solid #00F5D4', fontSize: 10 }} formatter={(value) => [`${value.toFixed(3)}`, 'Price']} />
           <Line type="monotone" dataKey="p" stroke="#FF00A8" strokeWidth={2} dot={false} />
         </LineChart>
       </ResponsiveContainer>
@@ -153,9 +196,23 @@ function PriceCharts() {
 }
 
 export default function App() {
-  const layout = baseLayouts
-  const cols = 12
+  const [layouts, setLayouts] = useState(() => {
+    try {
+      const raw = localStorage.getItem(storageKey)
+      return raw ? JSON.parse(raw) : defaultLayouts
+    } catch {
+      return defaultLayouts
+    }
+  })
+
+  useEffect(() => {
+    try { localStorage.setItem(storageKey, JSON.stringify(layouts)) } catch {}
+  }, [layouts])
+
+  const breakpoints = { lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }
+  const cols = { lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }
   const rowHeight = 30
+
   return (
     <div className="min-h-screen">
       <header className="p-4 flex items-center justify-between">
@@ -163,14 +220,14 @@ export default function App() {
         <ConnectButton connectText="Connect Sui Wallet" className="text-xs" />
       </header>
       <main className="p-4">
-        <GridLayout className="layout" layout={layout} cols={cols} rowHeight={rowHeight} width={1200}>
+        <ResponsiveGridLayout className="layout" layouts={layouts} onLayoutsChange={(_, all) => setLayouts(all)} breakpoints={breakpoints} cols={cols} rowHeight={rowHeight}>
           <div key="pools"><PoolsWidget /></div>
           <div key="trade"><TradePanel /></div>
           <div key="history"><HistoryView /></div>
           <div key="charts"><PriceCharts /></div>
-        </GridLayout>
+        </ResponsiveGridLayout>
       </main>
-      <footer className="p-4 opacity-60 text-xs">v1 — Sui DEX pool diff detection placeholder; cross-chain & liquidation hooks ready.</footer>
+      <footer className="p-4 opacity-60 text-xs">v1 — Sui DEX pool diff detection; cross-chain & liquidation hooks are placeholders for v2.</footer>
     </div>
   )
 }

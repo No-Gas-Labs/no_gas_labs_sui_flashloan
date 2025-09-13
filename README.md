@@ -18,9 +18,15 @@ yarn dev # local preview
 
 UI includes:
 - Pool monitoring widgets
-- Trading strategy panel (flash loan simulate)
+- Trading strategy panel (flash loan simulate/execute entry)
 - Transaction history view
 - Real-time price charts
+
+Enhancements (v1.1):
+- Responsive grid (mobile/tablet/desktop) using ResponsiveGridLayout
+- Drag-and-drop positions persist across reloads and resize (localStorage)
+- UX tooltips for APY, PnL and chart values
+- Placeholders for cross-chain and liquidation arbitrage within Pool Monitoring
 
 ## Move (Sui)
 
@@ -31,17 +37,24 @@ sui move build
 
 Module: `no_gas_labs::flashloan`
 - `init_pool` creates a sample pool
-- `borrow` entry as atomic flash loan placeholder with event emission and assertion
+- `borrow` returns a linear `LoanTicket` (must be repaid in-same-tx)
+- `repay` consumes ticket; events indicate start/success
 
-## Wiring Flash Loan (v1 placeholders)
-- Set your `packageId` and `poolId` in frontend callers when you deploy the Move package.
-- Uses wallet-standard signing via @mysten/dapp-kit.
+### Simulation (devInspect, testnet)
+- Connect Sui Wallet in UI (not required for devInspect in this environment)
+- In Trading panel, enter your deployed `packageId` and `poolId` (from `init_pool`).
+- Click Simulate to run `borrow + repay` in a single tx flow.
 
-## v1 Limitations
-- Arbitrage detection includes only Sui DEX pool-diff.
-- Cross-chain and liquidation arbitrage placeholders exist but are not wired.
-- Flash loan is a generic placeholder awaiting real pool interfaces.
+## v1 Limitations & Roadmap
+- Arbitrage detection: only Sui DEX pool-diff in v1.
+- Cross-chain and liquidation arbitrage are placeholders (UI + docs hooks) pending API & protocol endpoints.
+- Flash loan uses a generic interface; inject real pool IDs/package IDs when available.
 
-## Testnet Simulation
-- Connect Sui Wallet
-- Use Trading panel → Simulate/Execute (placeholder) to validate UI flows.
+## Milestones
+- v1.0 (M1-M3): UI scaffold, Move flash loan (LoanTicket), build/test fixes.
+- v1.1 (M4): Responsive layout + UX tooltips + grid persistence; placeholders for cross-chain & liquidation.
+- v1.2 (M5): Documentation updates for API/Move hooks (this file).
+
+## Future Integration Hooks
+- Cross-chain: provide price feed API endpoints and bridge executor; add Move entry `execute_cross_chain(ticket, ...)` in new module.
+- Liquidation: subscribe to lending protocol liquidation events; add Move entry `execute_liquidation(ticket, ...)`.
