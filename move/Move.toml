@@ -1,0 +1,12 @@
+[package]
+name = "no_gas_labs_flash_loan"
+version = "0.0.1"
+
+[addresses]
+no_gas_labs = "0x0"
+
+[dependencies]
+Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "framework/devnet" }
+
+[dev-addresses]
+no_gas_labs = "0x0"
