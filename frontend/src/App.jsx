@@ -1,8 +1,9 @@
 import React, { useMemo, useState } from 'react'
 import GridLayout from 'react-grid-layout'
-import { useWalletKit, ConnectButton } from '@mysten/dapp-kit'
+import { useWalletKit, ConnectButton, useSignAndExecuteTransaction } from '@mysten/dapp-kit'
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
 import { detectPoolDiffs } from './components/arbitrage'
+import { buildFlashLoanTx } from './components/flashLoan'
 import 'react-grid-layout/css/styles.css'
 import 'react-resizable/css/styles.css'
 
@@ -51,26 +52,44 @@ function PoolsWidget() {
 
 function TradePanel() {
   const { currentAccount } = useWalletKit()
+  const { mutateAsync: signAndExecute } = useSignAndExecuteTransaction()
   const [amount, setAmount] = useState('')
   const [pool, setPool] = useState('POOL_A')
+  const [packageId, setPackageId] = useState('')
+  const [poolId, setPoolId] = useState('')
+  const [sending, setSending] = useState(false)
 
   const onFlashLoan = async () => {
-    alert('Flash loan simulated. Replace with Move call once package published.')
+    if (!currentAccount) return alert('Connect Sui Wallet first')
+    if (!packageId || !poolId || !amount) return alert('Enter packageId, poolId, and amount')
+    setSending(true)
+    try {
+      const tx = buildFlashLoanTx({ packageId, poolId, amount, borrower: currentAccount.address })
+      const res = await signAndExecute({ transaction: tx })
+      alert(`Submitted: ${res.digest || 'ok'}`)
+    } catch (e) {
+      console.error(e)
+      alert('Flash loan failed; transaction reverted.')
+    } finally {
+      setSending(false)
+    }
   }
 
   return (
     <div className={card}>
       <h2 className="font-pixel text-magenta-500 mb-4 text-xs">Trading Strategy</h2>
       <div className="text-xs mb-2">Wallet: {currentAccount?.address ?? 'Not connected'}</div>
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-2 gap-2 mb-2">
+        <input value={packageId} onChange={e => setPackageId(e.target.value)} placeholder="Move packageId" className="bg-black border border-teal-700 p-2 text-xs col-span-2" />
+        <input value={poolId} onChange={e => setPoolId(e.target.value)} placeholder="Pool objectId" className="bg-black border border-teal-700 p-2 text-xs col-span-2" />
         <select value={pool} onChange={e => setPool(e.target.value)} className="bg-black border border-teal-700 p-2 text-xs">
           <option value="POOL_A">SUI/USDC</option>
           <option value="POOL_B">SUI/USDT</option>
         </select>
-        <input value={amount} onChange={e => setAmount(e.target.value)} placeholder="Loan amount" className="bg-black border border-magenta-700 p-2 text-xs" />
+        <input value={amount} onChange={e => setAmount(e.target.value)} placeholder="Loan amount (u64)" className="bg-black border border-magenta-700 p-2 text-xs" />
       </div>
-      <div className="mt-3 flex gap-2">
-        <button onClick={onFlashLoan} className="bg-teal-700 hover:bg-teal-500 text-black px-3 py-2 text-xs">Execute Flash Loan</button>
+      <div className="mt-1 flex gap-2">
+        <button disabled={sending} onClick={onFlashLoan} className="bg-teal-700 hover:bg-teal-500 disabled:opacity-50 text-black px-3 py-2 text-xs">Execute Flash Loan</button>
         <button className="bg-magenta-700 hover:bg-magenta-500 text-black px-3 py-2 text-xs">Simulate</button>
       </div>
     </div>

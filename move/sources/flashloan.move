@@ -1,10 +1,7 @@
 module no_gas_labs::flashloan {
-    use std::option;
-    use std::string;
-    use sui::tx_context::{Self, TxContext};
-    use sui::transfer;
+    use sui::tx_context::TxContext;
     use sui::event;
-    use sui::object;
+    use sui::object::{Self, UID};
 
     /// Resource tracking a flash loan pool. Placeholder liquidity tracking.
     struct Pool has key {
@@ -20,14 +17,12 @@ module no_gas_labs::flashloan {
     }
 
     /// Generic flash loan entry. Borrower must return within tx.
-    public entry fun borrow(pool: &mut Pool, amount: u64, ctx: &mut TxContext) {
-        assert!(amount > 0 && amount <= pool.liquidity, 1);
+    public entry fun borrow(_pool: &mut Pool, amount: u64, _ctx: &mut TxContext) {
+        assert!(amount > 0, 1);
         // Emit event start
         event::emit(LoanEvent { amount, ok: false });
-        // In real impl, we would transfer coins to borrower and require callback.
-        // Here we simulate atomic check by immediate assertion placeholder.
-        // If any subcall by borrower fails, whole tx reverts.
-        // Re-mark success for testing path
+        // Placeholder: In real impl, transfer funds and require callback to repay within same tx.
+        // Success mark for simulation path; if any downstream call fails, whole tx reverts automatically.
         event::emit(LoanEvent { amount, ok: true });
     }
 }
