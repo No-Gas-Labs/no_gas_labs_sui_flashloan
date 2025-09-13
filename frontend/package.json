@@ -1,0 +1,22 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@mysten/dapp-kit": "^0.18.0",
+    "@mysten/sui.js": "^0.54.1",
+    "@tanstack/react-query": "^5.87.4",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "react-grid-layout": "^1.5.2",
+    "recharts": "^3.2.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^5.0.2",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.13",
+    "vite": "^7.1.5"
+  }
+}
