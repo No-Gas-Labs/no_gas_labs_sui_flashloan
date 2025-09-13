@@ -14,6 +14,7 @@ Requirements: Node 18+, Yarn
 cd frontend
 yarn
 yarn dev # local preview
+yarn build && yarn preview # production build test
 ```
 
 UI includes:
@@ -41,7 +42,6 @@ Module: `no_gas_labs::flashloan`
 - `repay` consumes ticket; events indicate start/success
 
 ### Simulation (devInspect, testnet)
-- Connect Sui Wallet in UI (not required for devInspect in this environment)
 - In Trading panel, enter your deployed `packageId` and `poolId` (from `init_pool`).
 - Click Simulate to run `borrow + repay` in a single tx flow.
 
