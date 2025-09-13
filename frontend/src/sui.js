@@ -1,4 +1,4 @@
-import { SuiClient, getFullnodeUrl } from '@mysten/sui'
+import { SuiClient, getFullnodeUrl } from '@mysten/sui/client'
 
 export const clients = {
   testnet: new SuiClient({ url: getFullnodeUrl('testnet') }),
