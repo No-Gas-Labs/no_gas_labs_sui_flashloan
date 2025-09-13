@@ -52,7 +52,7 @@ function PoolsWidget() {
 }
 
 function TradePanel() {
-  const { currentAccount } = useWalletKit()
+  const currentAccount = useCurrentAccount()
   const { mutateAsync: signAndExecute } = useSignAndExecuteTransaction()
   const [amount, setAmount] = useState('')
   const [pool, setPool] = useState('POOL_A')
