@@ -1,5 +1,7 @@
 # No_Gas_Labs™ Flash Loan dApp (Sui)
 
+![build](https://github.com/No-Gas-Labs/no_gas_labs_sui_flashloan/actions/workflows/ci.yml/badge.svg) ![license](https://img.shields.io/github/license/No-Gas-Labs/no_gas_labs_sui_flashloan.svg)
+
 Pure Sui Move dApp with Vite React frontend.
 
 - Wallet: Sui Wallet (wallet-standard)
@@ -58,3 +60,24 @@ Module: `no_gas_labs::flashloan`
 ## Future Integration Hooks
 - Cross-chain: provide price feed API endpoints and bridge executor; add Move entry `execute_cross_chain(ticket, ...)` in new module.
 - Liquidation: subscribe to lending protocol liquidation events; add Move entry `execute_liquidation(ticket, ...)`.
+
+## Project Overview
+Brief description of the repository and its purpose.
+
+## Setup
+Installation steps and prerequisites.
+
+## Environment
+List env variables and how to configure.
+
+## Scripts
+Common commands (build, lint, test, start).
+
+## Demo
+Add a GIF or link to a short demo.
+
+## Changelog
+See CHANGELOG.md for release history.
+
+## License
+See LICENSE for details.
